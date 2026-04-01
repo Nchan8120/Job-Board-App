@@ -9,19 +9,19 @@ export default function JobListingsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  const fetchJobs = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/jobs', {
-        params: { search, page, pageSize: 10 }
-      });
-      setJobs(res.data.items);
-      setTotalPages(res.data.totalPages);
-    } catch {
-      console.error('Failed to fetch jobs');
-    } finally {
-      setLoading(false);
-    }
+  const fetchJobs = async (searchTerm = search) => {
+      setLoading(true);
+      try {
+        const res = await api.get('/jobs', {
+          params: { search: searchTerm, page, pageSize: 10 }
+        });
+        setJobs(res.data.items);
+        setTotalPages(res.data.totalPages);
+      } catch {
+        console.error('Failed to fetch jobs');
+      } finally {
+        setLoading(false);
+      }
   };
 
   // Fetch jobs when page changes
@@ -31,9 +31,15 @@ export default function JobListingsPage() {
 
   // Reset to page 1 and fetch when search changes
   const handleSearch = (e) => {
-    e.preventDefault();
-    setPage(1);
-    fetchJobs();
+      e.preventDefault();
+      setPage(1);
+      fetchJobs(search);
+  };
+
+  const handleReset = () => {
+      setSearch('');
+      setPage(1);
+      fetchJobs('');
   };
 
   return (
@@ -54,9 +60,9 @@ export default function JobListingsPage() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => { setSearch(''); setPage(1); fetchJobs(); }}
+            onClick={handleReset}
           >
-            Clear
+            Reset
           </button>
         )}
       </form>
