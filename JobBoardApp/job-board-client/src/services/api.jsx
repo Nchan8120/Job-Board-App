@@ -11,4 +11,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// If the server returns 401 (token expired/invalid), log the user out
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      localStorage.removeItem('id');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+
 export default api;

@@ -11,9 +11,11 @@ import Navbar from './components/Navbar';
 
 function PosterRoute({ children }) {
   const { user } = useAuth();
-  if (!user || user.role !== 'Poster') return <Navigate to="/" />;
+  if (!user) return <Navigate to="/login" />;
+  if (user.role !== 'Poster') return <Navigate to="/" />;
   return children;
 }
+
 
 function AppRoutes() {
   return (
