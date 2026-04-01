@@ -1,5 +1,10 @@
 namespace JobBoard.API.Models
 {
+    /// <summary>
+    /// Represents a Viewer's expressed interest in a job posting.
+    /// A unique index on UserId and JobId ensures a user can only
+    /// express interest in any given job once.
+    /// </summary>
     public class Interest
     {
         public int Id { get; set; }

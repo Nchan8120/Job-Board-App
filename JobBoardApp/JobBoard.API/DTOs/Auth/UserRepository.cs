@@ -1,3 +1,7 @@
+/// <summary>
+/// Handles all database operations for the User model.
+/// Used by AuthService to look up and create users during authentication.
+/// </summary>
 using JobBoard.API.Data;
 using JobBoard.API.Models;
 using Microsoft.EntityFrameworkCore;

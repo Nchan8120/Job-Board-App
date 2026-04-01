@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.API.Controllers
 {
+    /// <summary>
+    /// Handles interest (upvote) functionality on job postings.
+    /// Viewers can toggle their interest on a job.
+    /// Posters can view the list of interested users for their own jobs.
+    /// </summary>
     [ApiController]
     [Route("api/jobs/{jobId}/interest")]
     public class InterestController : ControllerBase

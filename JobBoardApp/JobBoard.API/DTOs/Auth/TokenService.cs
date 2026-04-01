@@ -6,6 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.API.Services
 {
+    /// <summary>
+    /// Generates signed JWT tokens for authenticated users.
+    /// Tokens include the user's ID, email, username, and role as claims.
+    /// </summary>
     public class TokenService
     {
         private readonly IConfiguration _config;

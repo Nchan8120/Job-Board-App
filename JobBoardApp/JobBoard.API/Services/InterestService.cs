@@ -4,6 +4,11 @@ using JobBoard.API.Repositories;
 
 namespace JobBoard.API.Services
 {
+    /// <summary>
+    /// Contains business logic for the interest/upvote feature.
+    /// Toggles interest on and off for a given user and job.
+    /// Restricts the interested users list to the job's original poster.
+    /// </summary>
     public class InterestService
     {
         private readonly InterestRepository _interestRepository;

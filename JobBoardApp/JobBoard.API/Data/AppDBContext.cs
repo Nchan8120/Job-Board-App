@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.API.Data
 {
+    /// <summary>
+    /// Entity Framework Core database context for the JobBoard application.
+    /// Configures relationships between User, Job, and Interest models
+    /// and enforces the unique constraint on user-job interest pairs.
+    /// </summary>
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

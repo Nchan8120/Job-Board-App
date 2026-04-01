@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.API.Repositories
 {
+    /// <summary>
+    /// Handles all database operations for the Interest model.
+    /// Enforces the unique constraint that a user can only express interest in a job once.
+    /// </summary>
     public class InterestRepository
     {
         private readonly AppDbContext _context;

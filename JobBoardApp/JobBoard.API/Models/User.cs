@@ -1,5 +1,9 @@
 namespace JobBoard.API.Models
 {
+    /// <summary>
+    /// Represents a registered user. Role is either "Poster" or "Viewer"
+    /// which determines what actions they can perform in the application.
+    /// </summary>
     public class User
     {
         public int Id { get; set; }

@@ -4,6 +4,10 @@ using JobBoard.API.Repositories;
 
 namespace JobBoard.API.Services
 {
+    /// <summary>
+    /// Contains business logic for user registration and login.
+    /// Handles password hashing via BCrypt and delegates token generation to TokenService.
+    /// </summary>
     public class AuthService
     {
         private readonly UserRepository _userRepository;

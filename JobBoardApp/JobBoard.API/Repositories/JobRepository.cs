@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.API.Repositories
 {
+    /// <summary>
+    /// Handles all database operations for the Job model.
+    /// Automatically filters out jobs older than 2 months in all listing queries.
+    /// </summary>
     public class JobRepository
     {
         private readonly AppDbContext _context;

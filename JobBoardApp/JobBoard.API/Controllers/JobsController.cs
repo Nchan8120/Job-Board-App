@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.API.Controllers
 {
+    /// <summary>
+    /// Handles CRUD endpoints for job postings.
+    /// Public endpoints allow anyone to view jobs.
+    /// Create, edit, and delete are restricted to authenticated Posters who own the job.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class JobsController : ControllerBase

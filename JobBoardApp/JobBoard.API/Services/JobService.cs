@@ -4,6 +4,10 @@ using JobBoard.API.Repositories;
 
 namespace JobBoard.API.Services
 {
+    /// <summary>
+    /// Contains business logic for job postings.
+    /// Handles filtering, pagination, ownership checks, and mapping between models and DTOs.
+    /// </summary>
     public class JobService
     {
         private readonly JobRepository _jobRepository;
