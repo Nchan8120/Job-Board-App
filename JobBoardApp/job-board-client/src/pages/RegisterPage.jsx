@@ -16,6 +16,10 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    if (form.password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
     try {
       const res = await api.post('/auth/register', form);
       login(res.data);
