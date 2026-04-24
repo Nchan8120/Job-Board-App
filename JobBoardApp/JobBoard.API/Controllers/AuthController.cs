@@ -13,30 +13,48 @@ namespace JobBoard.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            var result = await _authService.RegisterAsync(dto);
-            if (!result.Successful)
-                return BadRequest(result.Message);
+            try
+            {
+                var result = await _authService.RegisterAsync(dto);
+                if (!result.Successful)
+                    return BadRequest(result.Message);
 
-            return Ok(result.Data);
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during registration for email {Email}", dto.Email);
+                return StatusCode(500, "An unexpected error occurred during registration.");
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var result = await _authService.LoginAsync(dto);
-            if (!result.Successful)
-                return Unauthorized(result.Message);
+            try
+            {
+                var result = await _authService.LoginAsync(dto);
+                if (!result.Successful)
+                    return Unauthorized(result.Message);
 
-            return Ok(result.Data);
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during login for email {Email}", dto.Email);
+                return StatusCode(500, "An unexpected error occurred during login.");
+            }
         }
     }
 }
