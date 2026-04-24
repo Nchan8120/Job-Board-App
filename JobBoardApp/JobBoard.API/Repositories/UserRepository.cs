@@ -1,13 +1,13 @@
-/// <summary>
-/// Handles all database operations for the User model.
-/// Used by AuthService to look up and create users during authentication.
-/// </summary>
 using JobBoard.API.Data;
 using JobBoard.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.API.Repositories
 {
+    /// <summary>
+    /// Handles all database operations for the User model.
+    /// Used by AuthService to look up and create users during authentication.
+    /// </summary>
     public class UserRepository
     {
         private readonly AppDbContext _context;

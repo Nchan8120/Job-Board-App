@@ -20,37 +20,39 @@ namespace JobBoard.API.Services
             _jobRepository = jobRepository;
         }
 
-        // Get all interested users for a job (for Posters to view)
-        public async Task<List<InterestResponseDto>?> GetInterestedUsersAsync(int jobId, int userId)
+        public async Task<ServiceResult<List<InterestResponseDto>>> GetInterestedUsersAsync(int jobId, int userId)
         {
             var job = await _jobRepository.GetByIdAsync(jobId);
-            if (job == null) return null;
+            if (job == null)
+                return ServiceResult<List<InterestResponseDto>>.Failure("Job not found.");
 
-            // Only the poster of the job can see who's interested
-            if (job.PostedById != userId) return null;
+            if (job.PostedById != userId)
+                return ServiceResult<List<InterestResponseDto>>.Failure("You are not the poster of this job.");
 
             var interests = await _interestRepository.GetByJobIdAsync(jobId);
 
-            return interests.Select(i => new InterestResponseDto
+            var data = interests.Select(i => new InterestResponseDto
             {
                 Id = i.Id,
                 Username = i.User.Username,
                 ExpressedAt = i.ExpressedAt
             }).ToList();
+
+            return ServiceResult<List<InterestResponseDto>>.Success(data);
         }
 
-        // Toggle interest — if already interested, remove it. Otherwise add it.
-        public async Task<string?> ToggleInterestAsync(int jobId, int userId)
+        public async Task<ServiceResult<object>> ToggleInterestAsync(int jobId, int userId)
         {
             var job = await _jobRepository.GetByIdAsync(jobId);
-            if (job == null) return null;
+            if (job == null)
+                return ServiceResult<object>.Failure("Job not found.");
 
             var existing = await _interestRepository.GetByUserAndJobAsync(userId, jobId);
 
             if (existing != null)
             {
                 await _interestRepository.DeleteAsync(existing);
-                return "removed";
+                return ServiceResult<object>.Success(new { status = "removed" }, "Interest removed successfully.");
             }
 
             var interest = new Interest
@@ -60,7 +62,7 @@ namespace JobBoard.API.Services
             };
 
             await _interestRepository.CreateAsync(interest);
-            return "added";
+            return ServiceResult<object>.Success(new { status = "added" }, "Interest added successfully.");
         }
     }
 }

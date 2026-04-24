@@ -23,20 +23,20 @@ namespace JobBoard.API.Controllers
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             var result = await _authService.RegisterAsync(dto);
-            if (result == null)
-                return BadRequest("Email is already registered.");
+            if (!result.Successful)
+                return BadRequest(result.Message);
 
-            return Ok(result);
+            return Ok(result.Data);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var result = await _authService.LoginAsync(dto);
-            if (result == null)
-                return Unauthorized("Invalid email or password.");
+            if (!result.Successful)
+                return Unauthorized(result.Message);
 
-            return Ok(result);
+            return Ok(result.Data);
         }
     }
 }

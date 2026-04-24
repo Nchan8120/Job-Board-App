@@ -19,10 +19,10 @@ namespace JobBoard.API.Services
             _tokenService = tokenService;
         }
 
-        public async Task<AuthResponseDto?> RegisterAsync(RegisterDto dto)
+        public async Task<ServiceResult<AuthResponseDto>> RegisterAsync(RegisterDto dto)
         {
             if (await _userRepository.EmailExistsAsync(dto.Email))
-                return null; // email already taken
+                return ServiceResult<AuthResponseDto>.Failure("Email is already registered.");
 
             var user = new User
             {
@@ -35,32 +35,33 @@ namespace JobBoard.API.Services
             await _userRepository.CreateAsync(user);
             var token = _tokenService.GenerateToken(user);
 
-            return new AuthResponseDto
+            return ServiceResult<AuthResponseDto>.Success(new AuthResponseDto
             {
-                Id = user.Id, 
+                Id = user.Id,
                 Token = token,
                 Username = user.Username,
                 Role = user.Role
-            };
+            }, "Registration successful.");
         }
 
-        public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
+        public async Task<ServiceResult<AuthResponseDto>> LoginAsync(LoginDto dto)
         {
             var user = await _userRepository.GetByEmailAsync(dto.Email);
-            if (user == null) return null;
+            if (user == null)
+                return ServiceResult<AuthResponseDto>.Failure("Invalid email or password.");
 
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                return null;
+                return ServiceResult<AuthResponseDto>.Failure("Invalid email or password.");
 
             var token = _tokenService.GenerateToken(user);
 
-            return new AuthResponseDto
+            return ServiceResult<AuthResponseDto>.Success(new AuthResponseDto
             {
-                Id = user.Id, 
+                Id = user.Id,
                 Token = token,
                 Username = user.Username,
                 Role = user.Role
-            };
+            }, "Login successful.");
         }
     }
 }

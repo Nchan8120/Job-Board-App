@@ -1,4 +1,4 @@
-# JobBoard — Handy Bros Take-Home Project
+# JobBoard
 
 A full-stack job board application where users can post jobs and express interest in them.
 

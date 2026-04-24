@@ -21,28 +21,28 @@ namespace JobBoard.API.Controllers
             _interestService = interestService;
         }
 
-        // Viewers can toggle interest on a job
         [HttpPost]
         [Authorize(Roles = "Viewer")]
         public async Task<IActionResult> ToggleInterest(int jobId)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _interestService.ToggleInterestAsync(jobId, userId);
+            if (!result.Successful)
+                return NotFound(result.Message);
 
-            if (result == null) return NotFound("Job not found.");
-            return Ok(new { status = result });
+            return Ok(result.Data);
         }
 
-        // Posters can see who is interested in their job
         [HttpGet]
         [Authorize(Roles = "Poster")]
         public async Task<IActionResult> GetInterestedUsers(int jobId)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _interestService.GetInterestedUsersAsync(jobId, userId);
+            if (!result.Successful)
+                return NotFound(result.Message);
 
-            if (result == null) return NotFound("Job not found or you are not the poster.");
-            return Ok(result);
+            return Ok(result.Data);
         }
     }
 }

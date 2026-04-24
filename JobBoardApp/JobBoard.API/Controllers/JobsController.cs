@@ -22,7 +22,6 @@ namespace JobBoard.API.Controllers
             _jobService = jobService;
         }
 
-        // Anyone can view jobs
         [HttpGet]
         public async Task<IActionResult> GetAll(
             [FromQuery] string? search,
@@ -30,47 +29,49 @@ namespace JobBoard.API.Controllers
             [FromQuery] int pageSize = 10)
         {
             var result = await _jobService.GetAllAsync(search, page, pageSize);
-            return Ok(result);
+            return Ok(result.Data);
         }
 
-        // Anyone can view a single job
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var job = await _jobService.GetByIdAsync(id);
-            if (job == null) return NotFound();
-            return Ok(job);
+            var result = await _jobService.GetByIdAsync(id);
+            if (!result.Successful)
+                return NotFound(result.Message);
+
+            return Ok(result.Data);
         }
 
-        // Only Posters can create jobs
         [HttpPost]
         [Authorize(Roles = "Poster")]
         public async Task<IActionResult> Create(CreateJobDto dto)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var job = await _jobService.CreateAsync(dto, userId);
-            return CreatedAtAction(nameof(GetById), new { id = job.Id }, job);
+            var result = await _jobService.CreateAsync(dto, userId);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
         }
 
-        // Only Posters can edit their own jobs
         [HttpPut("{id}")]
         [Authorize(Roles = "Poster")]
         public async Task<IActionResult> Update(int id, UpdateJobDto dto)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var job = await _jobService.UpdateAsync(id, dto, userId);
-            if (job == null) return NotFound();
-            return Ok(job);
+            var result = await _jobService.UpdateAsync(id, dto, userId);
+            if (!result.Successful)
+                return NotFound(result.Message);
+
+            return Ok(result.Data);
         }
 
-        // Only Posters can delete their own jobs
         [HttpDelete("{id}")]
         [Authorize(Roles = "Poster")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _jobService.DeleteAsync(id, userId);
-            if (!result) return NotFound();
+            if (!result.Successful)
+                return NotFound(result.Message);
+
             return NoContent();
         }
     }
