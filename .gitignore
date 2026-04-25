@@ -505,3 +505,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# postman testing
+.postman/
+postman/
